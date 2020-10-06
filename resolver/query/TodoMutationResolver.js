@@ -27,6 +27,19 @@ class TodoMutationResolver {
       return null;
     }
   }
+
+  async deleteTodo({ id }) {
+    const todoToDelete = await Todo.findById(mongoose.Types.ObjectId(id));
+    if (!todoToDelete) {
+      throw new Error("Not Found");
+    }
+    const deleteResponse = await Todo.deleteOne({ _id: id });
+    if (deleteResponse.deletedCount > 0) {
+      return new TodoResponse(todoToDelete);
+    } else {
+      throw new Error("Unable to delete");
+    }
+  }
 }
 
 module.exports = TodoMutationResolver;
